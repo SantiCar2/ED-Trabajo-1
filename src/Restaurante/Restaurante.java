@@ -11,12 +11,29 @@ import Excepciones.*;
 public class Restaurante {
 	
 	Cliente clientes[] = new Cliente[0];
-	Mesero meseros[] = new Mesero[0];
-	Plato platos[] = new Plato[0]; //arreglo de platos que significan el menÃº del restaurante
+	Plato platos[] = new Plato[0]; //arreglo de platos que significan el menú del restaurante
 	Orden ordenes[] = new Orden[0];
 	Factura facturas[] = new Factura[0];
 	Mesa mesas[] = new Mesa[0];
-	Ingrediente ingredientes[]= new Ingrediente[0];
+	
+	//ingredientes en la despensa
+	//controlado internamente en la cocina por un programa aparte
+	Ingrediente i1 = new Ingrediente("tomate", 3, "120");
+	Ingrediente i2 = new Ingrediente("lechuga", 2, "1202");	
+	Ingrediente i3 = new Ingrediente("pan", 4, "12032");	
+	Ingrediente i4 = new Ingrediente("carne de hamburguesa", 4, "123");	
+	Ingrediente i5 = new Ingrediente("salsa de tomate", 4, "2342");	
+	
+	Ingrediente ingredientes[] = {i1,i2,i3,i4,i5};
+	
+	
+	//meseros del restaurante
+	Mesero m1 = new Mesero("Adonay", "1021", "3823", "calle", "sura", 1);
+	Mesero m2 = new Mesero("Pedro", "102321", "234", "carrera", "colsanitas", 5);
+	Mesero m3 = new Mesero("Samuel", "2423", "34", "sur", "prepa", 5);
+	
+	Mesero meseros[] = {m1,m2,m3};
+
 	
 
 	//Agregar cliente
@@ -96,8 +113,8 @@ public class Restaurante {
 		
 		if(i!=-1) {
 			mesas[i]=null; //vaciar espacio de mesa eliminada
-			mesas[i]=mesas[mesas.length-1]; //poner la mesa de la Ãºltima posiciÃ³n en la que queda vacÃ­a
-			mesas=Arrays.copyOf(mesas, mesas.length-1); //redimensionar el arreglo para que no quede con espacios vacÃ­os
+			mesas[i]=mesas[mesas.length-1]; //poner la mesa de la última posición en la que queda vacía
+			mesas=Arrays.copyOf(mesas, mesas.length-1); //redimensionar el arreglo para que no quede con espacios vacíos
 		}
 		else {
 			throw new EMesaExiste("La mesa que intenta eliminar no existe");
@@ -105,25 +122,13 @@ public class Restaurante {
 	}
 	
 	
-	
-	//Comprar ingrediente
-	public void comprarIngrediente(Ingrediente ingrediente) throws EIngredienteExiste   {
-			
-			if(buscarIngrediente(ingrediente.getId())==-1) {
-				ingredientes = Arrays.copyOf(ingredientes, ingredientes.length+1);
-				ingredientes[ingredientes.length-1]= ingrediente;
-			}
-			else {
-				throw new EIngredienteExiste("El ingrediente " +ingrediente.getId() + " que intenta agregar ya existe" );
-			}
 
-	}
 	
 	//buscar ingrediente
 	public int buscarIngrediente(String idIngrediente) {
 		int i=0;
 		
-		while(i<ingredientes.length && !idIngrediente.equals(ingredientes[i].getId())) {
+		while(i<ingredientes.length && !idIngrediente.equals(ingredientes[i].getId())&& ingredientes[i].getCantidad()!=0) {
 			i=i+1;
 		}
 		
@@ -134,44 +139,7 @@ public class Restaurante {
 			return -1;
 	}
 	
-	//eliminar ingrediente 
-	public void eliminarIngrediente(Ingrediente ingrediente) throws EIngredienteExiste, EPlatoExiste {
-		int i = buscarIngrediente(ingrediente.getId());
-		
-		if(i!=-1) {
-			ingredientes[i]=null;
-			ingredientes[i]=ingredientes[ingredientes.length-1];
-			ingredientes=Arrays.copyOf(ingredientes, ingredientes.length-1);
-			//verificar quÃ© platos se inhabilitan al eliminar el ingrediente
-			for (int j = 0; j < platos.length; j++) {
-				inhabilitarPlato(platos[i]);
-			} 
-		}
-		else {
-			throw new EIngredienteExiste("El ingrediente que intenta eliminar no existe");
-		}
-	}
-	
-	//Agregar cantidad ingrediente
-	public void agregarCantidadIngrediente(int cantidad, String idIngrediente) throws EIngredienteExiste   {
-			int i = buscarIngrediente(idIngrediente);
-			ingredientes[i].setCantidad(ingredientes[i].getCantidad()+cantidad);
 
-	}
-	
-	
-	//Contratar mesero
-	public void contratarMesero(Mesero mesero) throws EMeseroExiste   {
-			
-			if(buscarMesero(mesero.getId())==-1) {
-				meseros = Arrays.copyOf(meseros, meseros.length+1);
-				meseros[meseros.length-1]= mesero;
-			}
-			else {
-				throw new EMeseroExiste("El mesero " +mesero.getId() + " que intenta agregar ya existe" );
-			}
-
-	}
 	
 	//buscar mesero
 	public int buscarMesero(String idMesero) {
@@ -187,20 +155,7 @@ public class Restaurante {
 		else 
 			return -1;
 	}
-	
-	//despedir mesero
-	public void despedirMesero(Mesero mesero) throws EMeseroExiste {
-		int i = buscarMesero(mesero.getId());
-		
-		if(i!=-1) {
-			meseros[i]=null;
-			meseros[i]=meseros[meseros.length-1];
-			meseros=Arrays.copyOf(meseros, meseros.length-1);
-		}
-		else {
-			throw new EMeseroExiste("El mesero que intenta eliminar no existe");
-		}
-	}
+
 	
 	
 	//Hacer orden
@@ -210,7 +165,7 @@ public class Restaurante {
 	}
 	
 	//Buscar orden
-	public int buscarOrden(Orden o) throws Exception{
+	public int buscarOrden(Orden o) throws EOrdenExiste{
 		boolean found = false;
 		int cont = 0;
 		while(cont < ordenes.length && !found) {	//Repite hasta que encuentre la orden o se termine el arreglo
@@ -224,7 +179,7 @@ public class Restaurante {
 	}
 	
 	//Eliminar orden
-	public void eliminarOrden(Orden o) throws Exception{
+	public void eliminarOrden(Orden o) throws EOrdenExiste{
 		int pos = buscarOrden(o);	//Busca la posicion de la orden en el arreglo
 		ordenes[pos] = ordenes[ordenes.length - 1];	//Reemplaza la orden con la ultima orden en el arreglo
 		ordenes = Arrays.copyOf(ordenes, ordenes.length - 1);	//Reduce el tamano del arreglo
@@ -273,11 +228,10 @@ public class Restaurante {
 	//inhabilitar plato
 	public void inhabilitarPlato(Plato plato) throws EPlatoExiste {
 		
-		
 		int j= plato.getIngredientes().length;
 		int acum=0;
-		for (int i = 0; i < ingredientes.length; i++) {
-			if(plato.buscarIngrediente(ingredientes[i].getId())!=-1) {
+		for (int i = 0; i < j; i++) {
+			if(buscarIngrediente(plato.ingredientes[i].getId())!=-1) {
 				acum=acum+1;
 			}
 		}
@@ -296,7 +250,7 @@ public class Restaurante {
 	public int verificarDisponibilidadMesa(int nroPersonas) {
 		int acum=0;
 		//recorre el arreglo de mesas hasta encontrar una que este disponible y tenga el numero de puestos requerido 
-		while(acum<mesas.length && (!mesas[acum].isDisponibilidad()||mesas[acum].getNroPuestos()!=nroPersonas)) {
+		while(acum<mesas.length && (!mesas[acum].isDisponibilidad()||mesas[acum].getNroPuestos()<nroPersonas)) {
 			acum++;	
 		}
 		if (acum<mesas.length) {
@@ -307,8 +261,8 @@ public class Restaurante {
 	
 	//asignar mesa
 
-	public int asignarMesa(int nroPersonas) throws ENoHayMesasDisponibles {
-		int i = verificarDisponibilidadMesa(nroPersonas);
+	public int asignarMesa(int j) throws ENoHayMesasDisponibles {
+		int i = verificarDisponibilidadMesa(j);
 		if(i!=-1) {
 			mesas[i].setDisponibilidad(false);
 		return mesas[i].getNroMesa();
@@ -320,16 +274,16 @@ public class Restaurante {
 	
 
 	//verificar disponibilidad mesero
-	public int verificarDisponibilidadMesero() {
+	public int verificarDisponibilidadMesero() throws ENoHayMeseros {
 		int acum=0;
 		//recorre el arreglo de mesas hasta encontrar una que este disponible y tenga el numero de puestos requerido 
 		while(acum<meseros.length && (!meseros[acum].isDisponibilidad())) {
-			acum++;	
+			acum=acum+1;	
 		}
 		if (acum<meseros.length) {
 			return acum;
 		}
-		return -1;
+		throw new ENoHayMeseros("En el momento no hay meseros disponibes");
 	}
 	
 	//asignar mesero
@@ -337,10 +291,9 @@ public class Restaurante {
 	public Mesero asignarMesero() throws ENoHayMeseros {
 		int i = verificarDisponibilidadMesero();
 		if(i!=-1) {
-			meseros[i].setMesasDisponibles(meseros[i].getMesasDisponibles()+1);//agregar el nÃºmero de mesas que estÃ¡ atendiendo un mesero
-			int j= meseros[i].getMesasAtencion();
-			int k = meseros[i].getMesasDisponibles();
-			if(j==k) {
+			meseros[i].setMesasDisponibles(meseros[i].getMesasDisponibles()-1);//agregar el número de mesas que está atendiendo un mesero
+		
+			if(meseros[i].getMesasDisponibles()==0) {
 				meseros[i].setDisponibilidad(false);
 			}
 			return meseros[i];
@@ -361,14 +314,13 @@ public class Restaurante {
 		m=factura.getOrden().getMesero();
 		c=factura.getOrden().getClientePpal();
 		
-		if (m.getMesasAtencion()>=3) {//para saber si el mesero tiene mas de 3 mesas asignadas
+		if (m.getMesasDisponibles()==0) {//para saber si el mesero está ocupado con su máximo de mesas
 			
-			m.setMesasAtencion(m.getMesasAtencion()-1);//reduce las mesas que atiende el mesero 											
+			m.setMesasDisponibles(m.getMesasDisponibles()+1);//aumenta la disponiblidad de mesas  que atiende el mesero 											
 			m.setDisponibilidad(true);//hace disponible al mesero que atendia esa mesa
 			
-		}else if(m.getMesasAtencion()<3) {//lo mismo que antes, solo que ya no hace falta cambiar la disponibilidad
-																	   //pues menos que 3 siempre es true
-			m.setMesasAtencion(m.getMesasAtencion()-1);
+		}else{
+			m.setMesasDisponibles(m.getMesasDisponibles()+1);//aumenta la disponibolidad de  las mesas que atiende el mesero 											
 			
 		}
 		//llama al metodo para eliminar el cliente que se va del array
@@ -377,10 +329,10 @@ public class Restaurante {
 	}
 
 	
-	//MÃ‰TODO FACTURA
+	//MÉTODO FACTURA
 	//Crear Factura
    	public void crearFactura(Factura factura) {
-       	facturas = Arrays.copyOf(facturas, facturas.length + 1); //Agrega una posiciÃ³n a la lista de las facturas
+       	facturas = Arrays.copyOf(facturas, facturas.length + 1); //Agrega una posición a la lista de las facturas
        	facturas[facturas.length - 1] = factura; //agrega la factura a la lista de facturas
     }
    	
@@ -388,7 +340,7 @@ public class Restaurante {
 	 
    	public double calcularPrecio (Orden orden) throws EListaVacia {
 		if (orden.getPlatos()==null || orden.getPlatos().length==0) {
-			throw new EListaVacia("No hay ningÃºn plato en la orden");
+			throw new EListaVacia("No hay ningún plato en la orden");
 		}
 		return orden.calcularPrecio(orden.getPlatos(),0);
    	}
@@ -458,6 +410,7 @@ public class Restaurante {
 		}
 	}
 	
+	
 	//getters and setters
 	public Plato[] getPlatos() {
 		return platos;
@@ -473,5 +426,18 @@ public class Restaurante {
 	public void setPlatos(Plato[] platos) {
 		this.platos = platos;
 	}
+
+	public Orden[] getOrden() {
+		return ordenes;
+	}
+	
+	public void setOrden(Orden[] o) {
+		this.ordenes = o;
+	}
+
+	public Mesero[] getMeseros() {
+		return meseros;
+	}
+	
 }
 

@@ -18,7 +18,7 @@ public class Mesero extends Persona{
 		this.mesasAtencion = mesasAtencion;
 		this.mesasDisponibles=mesasAtencion;
 	}
-
+	
 	//getters and setters 
 	public String getDireccion() {
 		return direccion;

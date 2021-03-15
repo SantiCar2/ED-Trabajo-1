@@ -48,20 +48,7 @@ public class Test {
 		System.out.println("MESAS");
 		r.imprimirMesas();
 		System.out.println(" ");
-		
-		//contratar meseros
-		Mesero m1 = new Mesero("Adonay", "1021", "3823", "calle", "sura", 5);
-		Mesero m2 = new Mesero("Pedro", "102321", "234", "carrera", "colsanitas", 5);
-		Mesero m3 = new Mesero("Samuel", "2423", "34", "sur", "prepa", 5);
-		
-		try {
-			r.contratarMesero(m1);
-			r.contratarMesero(m2);
-			r.contratarMesero(m3);
-		} catch (EMeseroExiste e) {
-			System.out.println(e.getMessage());
-		}
-		
+			
 		System.out.println("MESEROS");
 		r.imprimirMeseros();
 		System.out.println(" ");
@@ -69,20 +56,6 @@ public class Test {
 		//crear ingredientes
 		Ingrediente i1 = new Ingrediente("tomate", 3, "120");
 		Ingrediente i2 = new Ingrediente("lechuga", 4, "1202");
-		
-		try {
-			r.comprarIngrediente(i2);
-			r.comprarIngrediente(i1);
-		} catch (EIngredienteExiste e) {
-			System.out.println(e.getMessage());
-		}
-		
-		//comprar más ingredientes
-		try {
-			r.agregarCantidadIngrediente(10, "120");
-		} catch (EIngredienteExiste e) {
-			System.out.println(e.getMessage());
-		}
 		
 		System.out.println("INGREDIENTES");
 		r.imprimirI();
