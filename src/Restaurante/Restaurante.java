@@ -50,10 +50,10 @@ public class Restaurante {
 	}
 	
 	//buscar cliente
-	public int buscarCliente(String codigoCliente) {
+	public int buscarCliente(String id) {
 		int i=0;
 		
-		while(i<clientes.length && !codigoCliente.equals(clientes[i].getId())) {
+		while(i<clientes.length && !id.equals(clientes[i].getId())) {
 			i=i+1;
 		}
 		
@@ -413,6 +413,9 @@ public class Restaurante {
 	
 	
 	//getters and setters
+	public Cliente[] getClientes() {
+		return clientes;
+	}
 	public Plato[] getPlatos() {
 		return platos;
 	}

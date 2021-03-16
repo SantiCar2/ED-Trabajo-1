@@ -132,7 +132,9 @@ public class Orden {
 	public Plato[] getPlatos() {
 		return platos;
 	}
-
+	public void setPlatos(Plato[] p) {
+		this.platos = p;
+	}
 
 	public int getNroMesa() {
 		return nroMesa;

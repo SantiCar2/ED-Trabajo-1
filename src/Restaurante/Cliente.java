@@ -5,9 +5,9 @@ public class Cliente extends Persona{
 	private int nroComensales;
 
 	//constructor
-	public Cliente(String nombre, String id, String tel, int nroComensales) {
+	public Cliente(String nombre, String id, String tel) {
 		super(nombre, id, tel);
-		this.nroComensales = nroComensales;
+		this.nroComensales = 1;
 	}
 
 	//getters and setters

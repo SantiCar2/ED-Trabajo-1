@@ -63,7 +63,9 @@ public class InterfazRestaurante {
 	private JButton btnAddPlato;
 	private JButton btnEliminarPlato;
 	private JComboBox listaPlatos;
-
+	private String[] values;
+	private String[] listaPlatosSTR;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -94,11 +96,9 @@ public class InterfazRestaurante {
 	@SuppressWarnings("unchecked")
 	private void initialize() {
 		//Creamos restaurante
-		Restaurante r = Test.r;
-		Orden[] o = r.getOrden();
-		String[] values = new String[o.length];
-		for(int i = 0; i < o.length; i++) {
-			values[i] = "Orden de " + o[i].clientePpal.getNombre();
+		values = new String[Test.r.getOrden().length];
+		for(int i = 0; i < Test.r.getOrden().length; i++) {
+			values[i] = "Orden de " + Test.r.getOrden()[i].clientePpal.getNombre();
 			System.out.println(values[i]);
 		}
 		ordenIndex ordenIndex = new ordenIndex(0);
@@ -128,10 +128,10 @@ public class InterfazRestaurante {
 					while (i < values.length && !isDone) {
 						try {
 						if(list.getSelectedValue().toString().equalsIgnoreCase(values[i])) {
-								lblInfoOrden.setText("<html><body>" + o[i].getClientePpal().getNombre()
-										+ "<br> Mesero:" + o[i].getMesero().getNombre() + "<br> Platos:");
-								for(int j = 0; j < o[i].getPlatos().length; j++) {
-									lblInfoOrden.setText(lblInfoOrden.getText() + "<br>" + o[i].getPlatos()[j].getNombre());
+								lblInfoOrden.setText("<html><body>" + Test.r.getOrden()[i].getClientePpal().getNombre()
+										+ "<br> Mesero:" + Test.r.getOrden()[i].getMesero().getNombre() + "<br> Platos:");
+								for(int j = 0; j < Test.r.getOrden()[i].getPlatos().length; j++) {
+									lblInfoOrden.setText(lblInfoOrden.getText() + "<br>" + Test.r.getOrden()[i].getPlatos()[j].getNombre());
 								}
 								lblInfoOrden.setText(lblInfoOrden.getText() + "</body></html>");
 								isDone = true;
@@ -172,14 +172,13 @@ public class InterfazRestaurante {
 		btnAsignar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if(o[ordenIndex.getIndex()].getNroMesa() == 0) {
-						txtMesaNoDisponible.setText(String.valueOf(r.asignarMesa(Integer.parseInt(cantidadComensales.getText()))));
+					if(Test.r.getOrden()[ordenIndex.getIndex()].getNroMesa() == 0) {
+						txtMesaNoDisponible.setText(String.valueOf(Test.r.asignarMesa(Integer.parseInt(cantidadComensales.getText()))));
 						if(Integer.parseInt(cantidadComensales.getText()) <= 6) {
-							for (int i = 0; i < o.length; i++) {
+							for (int i = 0; i < Test.r.getOrden().length; i++) {
 								if(list.getSelectedValue().toString().equalsIgnoreCase(values[i])) {
-									o[i].setNroMesa(Integer.parseInt(txtMesaNoDisponible.getText()));
-									r.setOrden(o);
-									Test.r = r;
+									Test.r.getOrden()[i].setNroMesa(Integer.parseInt(txtMesaNoDisponible.getText()));
+									Test.r.setOrden(Test.r.getOrden());
 								}
 							}
 						}else {
@@ -232,9 +231,9 @@ public class InterfazRestaurante {
 		});
 		
 		MeserosTotal.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		String[] meserosTotales = new String[r.getMeseros().length];
+		String[] meserosTotales = new String[Test.r.getMeseros().length];
 		for (int i = 0; i < meserosTotales.length; i++) {
-			meserosTotales[i] = r.getMeseros()[i].getNombre();
+			meserosTotales[i] = Test.r.getMeseros()[i].getNombre();
 		}
 		MeserosTotal.setModel(new DefaultComboBoxModel(meserosTotales));
 		MeserosTotal.setBounds(10, 536, 105, 25);
@@ -252,10 +251,10 @@ public class InterfazRestaurante {
 		
 		MeserosDisponibles = new JComboBox();
 		String[] meserosDisponibles = new String[0];
-		for(int i = 0; i < r.getMeseros().length; i++) {
-			if(r.getMeseros()[i].getMesasDisponibles() != 0) {
+		for(int i = 0; i < Test.r.getMeseros().length; i++) {
+			if(Test.r.getMeseros()[i].getMesasDisponibles() != 0) {
 				meserosDisponibles = Arrays.copyOf(meserosDisponibles, meserosDisponibles.length + 1);
-				meserosDisponibles[meserosDisponibles.length - 1] = r.getMeseros()[i].getNombre();
+				meserosDisponibles[meserosDisponibles.length - 1] = Test.r.getMeseros()[i].getNombre();
 			}
 		}
 		MeserosDisponibles.setModel(new DefaultComboBoxModel(meserosDisponibles));
@@ -270,10 +269,10 @@ public class InterfazRestaurante {
 		
 		MeserosOcupados = new JComboBox();
 		String[] meserosOcupados = new String[0];
-		for(int i = 0; i < r.getMeseros().length; i++) {
-			if(r.getMeseros()[i].getMesasDisponibles() == 0) {
+		for(int i = 0; i < Test.r.getMeseros().length; i++) {
+			if(Test.r.getMeseros()[i].getMesasDisponibles() == 0) {
 				meserosOcupados = Arrays.copyOf(meserosOcupados, meserosOcupados.length + 1);
-				meserosOcupados[meserosOcupados.length - 1] = r.getMeseros()[i].getNombre();
+				meserosOcupados[meserosOcupados.length - 1] = Test.r.getMeseros()[i].getNombre();
 			}
 		}
 		MeserosOcupados.setModel(new DefaultComboBoxModel(meserosOcupados));
@@ -291,8 +290,8 @@ public class InterfazRestaurante {
 		CerrarOrden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					r.eliminarOrden(o[ordenIndex.getIndex()]);
-					actualizar(r, r.getOrden());
+					Test.r.eliminarOrden(Test.r.getOrden()[ordenIndex.getIndex()]);
+					actualizarOrden(Test.r, Test.r.getOrden());
 				} catch (EOrdenExiste e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(), null, 0);
 				}
@@ -304,7 +303,7 @@ public class InterfazRestaurante {
 		btnNewButton = new JButton("Actualizar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				actualizar(r, r.getOrden());
+				actualizar(Test.r);
 			}
 		});
 		btnNewButton.setBounds(10, 584, 125, 23);
@@ -345,21 +344,48 @@ public class InterfazRestaurante {
 						}
 						String id = JOptionPane.showInputDialog("Ingrese el id del plato");
 						Ingrediente[] ingredientes = new Ingrediente[2];
-						String[] ing = new String[r.getIngredientes().length]; 
-						for(int i = 0; i < r.getIngredientes().length; i++) {
-							ing[i] = r.getIngredientes()[i].getNombre();
+						String[] ing = new String[Test.r.getIngredientes().length]; 
+						for(int i = 0; i < Test.r.getIngredientes().length; i++) {
+							ing[i] = Test.r.getIngredientes()[i].getNombre();
 						}
 						jcb = new JComboBox(ing);
 						jcb.setEditable(true);
 						JOptionPane.showMessageDialog(null, jcb, "Seleccione el ingrediente principal", JOptionPane.QUESTION_MESSAGE);
-						ingredientes[0] = r.getIngredientes()[jcb.getSelectedIndex()];
+						ingredientes[0] = Test.r.getIngredientes()[jcb.getSelectedIndex()];
 						jcb = new JComboBox(ing);
 						jcb.setEditable(true);
 						JOptionPane.showMessageDialog(null, jcb, "Seleccione el ingrediente secundario", JOptionPane.QUESTION_MESSAGE);
-						ingredientes[1] = r.getIngredientes()[jcb.getSelectedIndex()];
+						ingredientes[1] = Test.r.getIngredientes()[jcb.getSelectedIndex()];
 						Plato p = new Plato(nombre, tipoPlato, precio, id, ingredientes);
 						try {
-							r.crearPlato(p);
+							Test.r.crearPlato(p);
+							listaPlatosSTR = new String[Test.r.getPlatos().length];
+							for (int i = 0; i < Test.r.getPlatos().length; i++) {
+								listaPlatosSTR[i] = Test.r.getPlatos()[i].getNombre();
+							}
+							listaPlatos.setModel(new DefaultComboBoxModel(listaPlatosSTR));
+							
+							String[] Entradas = new String[0];
+							for(int i = 0; i < Test.r.getPlatos().length; i++) {
+								if(Test.r.getPlatos()[i].getTipoPlato().equalsIgnoreCase("Entrada")) {
+									Entradas = Arrays.copyOf(Entradas, Entradas.length + 1);
+									Entradas[Entradas.length - 1] = Test.r.getPlatos()[i].getNombre() + ": $" + Test.r.getPlatos()[i].getPrecio();
+								}
+							}
+							String[] Fuertes = new String[0];
+							for(int i = 0; i < Test.r.getPlatos().length; i++) {
+								if(Test.r.getPlatos()[i].getTipoPlato().equalsIgnoreCase("Fuerte")) {
+									Fuertes = Arrays.copyOf(Fuertes, Fuertes.length + 1);
+									Fuertes[Fuertes.length - 1] = Test.r.getPlatos()[i].getNombre() + ": $" + Test.r.getPlatos()[i].getPrecio();
+								}
+							}
+							String[] Bebidas = new String[0];
+							for(int i = 0; i < Test.r.getPlatos().length; i++) {
+								if(Test.r.getPlatos()[i].getTipoPlato().equalsIgnoreCase("Bebida")) {
+									Bebidas = Arrays.copyOf(Bebidas, Bebidas.length + 1);
+									Bebidas[Bebidas.length - 1] = Test.r.getPlatos()[i].getNombre() + ": $" + Test.r.getPlatos()[i].getPrecio();
+								}
+							}
 						} catch (EPlatoExiste e1) {
 							JOptionPane.showMessageDialog(null, e1.getMessage(),null, 0);
 						}
@@ -374,7 +400,7 @@ public class InterfazRestaurante {
 		btnEliminarPlato.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Plato[] pl = r.getPlatos();
+					Plato[] pl = Test.r.getPlatos();
 					
 					Ingrediente i1 = new Ingrediente("tomate", 3, "120");
 					Ingrediente i2 = new Ingrediente("lechuga", 4, "1202");
@@ -382,7 +408,7 @@ public class InterfazRestaurante {
 					ing[0]=i1;
 					ing[1]=i2;
 					Plato p2 = new Plato("Pizza", "Fuerte",27000, "121201", ing);
-					r.eliminarPlato(p2);
+					Test.r.eliminarPlato(p2);
 				} catch (EPlatoExiste e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(),null, 0);
 				}
@@ -391,9 +417,9 @@ public class InterfazRestaurante {
 		btnEliminarPlato.setBounds(932, 239, 176, 23);
 		frame.getContentPane().add(btnEliminarPlato);
 		
-		String[] listaPlatosSTR = new String[r.getPlatos().length];
-		for (int i = 0; i < r.getPlatos().length; i++) {
-			listaPlatosSTR[i] = r.getPlatos()[i].getNombre();
+		listaPlatosSTR = new String[Test.r.getPlatos().length];
+		for (int i = 0; i < Test.r.getPlatos().length; i++) {
+			listaPlatosSTR[i] = Test.r.getPlatos()[i].getNombre();
 		}
 		listaPlatos = new JComboBox(listaPlatosSTR);
 		listaPlatos.setBounds(932, 180, 174, 20);
@@ -404,7 +430,7 @@ public class InterfazRestaurante {
 		frame.getContentPane().add(lblNewLabel_1);
 	}
 	
-	void actualizar(Restaurante r, Orden[] o) {
+	void actualizarOrden(Restaurante r, Orden[] o) {
 		r.setOrden(o);
 		Test.r = r;
 		
@@ -432,6 +458,47 @@ public class InterfazRestaurante {
 		
 		o = r.getOrden();
 		String[] values = new String[o.length];
+		for(int i = 0; i < o.length; i++) {
+			values[i] = "Orden de " + o[i].clientePpal.getNombre();
+			System.out.println(values[i]);
+		}
+		list.clearSelection();
+		list.setModel(new AbstractListModel() {
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+
+	}
+	
+	public void actualizar(Restaurante r) {
+		System.out.println("Actualizando...");
+		
+		String[] meserosOcupados = new String[0];
+		for(int i = 0; i < r.getMeseros().length; i++) {
+			if(r.getMeseros()[i].getMesasDisponibles() == 0) {
+				meserosOcupados = Arrays.copyOf(meserosOcupados, meserosOcupados.length + 1);
+				meserosOcupados[meserosOcupados.length - 1] = r.getMeseros()[i].getNombre();
+			}
+		}
+		MeserosOcupados.setModel(new DefaultComboBoxModel(meserosOcupados));
+		
+		String[] meserosTotales = new String[r.getMeseros().length];
+		for (int i = 0; i < meserosTotales.length; i++) {
+			meserosTotales[i] = r.getMeseros()[i].getNombre();
+		}
+		MeserosTotal.setModel(new DefaultComboBoxModel(meserosTotales));
+		
+		lblInfoOrden.setText("");
+		
+		CerrarOrden.setEnabled(false);
+		btnAsignar.setEnabled(false);
+		
+		Orden[] o = r.getOrden();
+		values = new String[o.length];
 		for(int i = 0; i < o.length; i++) {
 			values[i] = "Orden de " + o[i].clientePpal.getNombre();
 			System.out.println(values[i]);
