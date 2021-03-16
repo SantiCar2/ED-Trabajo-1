@@ -9,10 +9,12 @@ import Excepciones.ENoHayMeseros;
 import Excepciones.EPlatoExiste;
 
 public class Test {
+	public static Restaurante r = new Restaurante();//crear restaurante
+
 
 	public static void main(String[] args) {
 		
-		Restaurante r = new Restaurante();//crear restaurante
+		
 		
 		//crear clientes
 		Cliente cliente1 = new Cliente("Juanita", "100","443", 2);
@@ -36,7 +38,7 @@ public class Test {
 		//agregar mesas
 		Mesa mesa1 = new Mesa(1,3);
 		Mesa mesa2 = new Mesa(2, 4);
-		Mesa mesa3 = new Mesa(3, 10);
+		Mesa mesa3 = new Mesa(3, 6);
 		
 		try {
 			r.agregarMesa(mesa1);
@@ -84,14 +86,14 @@ public class Test {
 		Orden o1 = null;
 		try {
 			//crear plato, llamando al método asignar mesa y asignar mesero
-			o1 = new Orden(cliente1, r.asignarMesa(3), r.asignarMesero());
+			o1 = new Orden(cliente1, r.asignarMesero());
 			try {
 				o1.addPlato(o1.modificarPlato(p1, "Sin sal"),r);
 				o1.addPlato(p2,r);
 			} catch (EPlatoExiste e1) {
 				System.out.println(e1.getMessage());
 			}
-		} catch (ENoHayMesasDisponibles | ENoHayMeseros e2) {
+		} catch (ENoHayMeseros e2) {
 			e2.getMessage();
 		}
 
@@ -108,6 +110,15 @@ public class Test {
 		System.out.println("");
 		
 		o1.imprimirP();
+		
+		Orden[] os = new Orden[1];
+		os[0] = o1;
+		r.setOrden(os);
+		
+		
+		InterfazRestaurante admin = new InterfazRestaurante();
+		admin.main(null);
+		
 		
 	}
 }

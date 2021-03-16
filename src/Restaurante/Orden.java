@@ -12,9 +12,9 @@ public class Orden {
 	Mesero mesero;
 	
 	//constructor: el nro de mesa  se llena con el métodos de asignació
-	public Orden(Cliente clientePpal, int nroMesa, Mesero mesero) {
+	public Orden(Cliente clientePpal, Mesero mesero) {
 		this.clientePpal = clientePpal;
-		this.nroMesa = nroMesa;
+		this.nroMesa = 0;
 		this.mesero = mesero;
 	} 
 	

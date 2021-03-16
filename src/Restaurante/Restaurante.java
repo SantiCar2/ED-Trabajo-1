@@ -173,7 +173,7 @@ public class Restaurante {
 			cont++;
 		}
 		if(found) {	//Si encuentre retorna la posicion
-			return cont;
+			return cont - 1;
 		}
 		throw new EOrdenExiste("La orden no existe");	//Si no encuntra lanza error
 	}
@@ -183,6 +183,7 @@ public class Restaurante {
 		int pos = buscarOrden(o);	//Busca la posicion de la orden en el arreglo
 		ordenes[pos] = ordenes[ordenes.length - 1];	//Reemplaza la orden con la ultima orden en el arreglo
 		ordenes = Arrays.copyOf(ordenes, ordenes.length - 1);	//Reduce el tamano del arreglo
+		System.out.println(ordenes.length);
 	}
 	
 	//buscar plato
